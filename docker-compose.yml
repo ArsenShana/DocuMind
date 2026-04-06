@@ -1,0 +1,29 @@
+services:
+  documind:
+    build: .
+    container_name: documind-api
+    restart: unless-stopped
+    volumes:
+      - ./uploads:/app/uploads
+      - ./data:/app/data
+    env_file:
+      - .env
+    environment:
+      - UPLOAD_DIR=/app/uploads
+    networks:
+      - documind
+
+  frontend:
+    build: ./frontend
+    container_name: documind-frontend
+    restart: unless-stopped
+    ports:
+      - "8002:80"
+    depends_on:
+      - documind
+    networks:
+      - documind
+
+networks:
+  documind:
+    driver: bridge
